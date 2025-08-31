@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.translatorapp.data.ApiResult
@@ -29,9 +30,10 @@ import com.example.translatorapp.presentation.viewmodels.TranslationViewModel
 // presentation/screens/TranslationScreen.kt
 @Composable
 fun TranslationScreen(
-    viewModel: TranslationViewModel = viewModel(factory = TranslationViewModelFactory()),
     onNavigateToHistory: () -> Unit
 ) {
+    val context = LocalContext.current
+    val viewModel: TranslationViewModel = viewModel(factory = TranslationViewModelFactory(context))
     val uiState by viewModel.uiState
 
     Column(

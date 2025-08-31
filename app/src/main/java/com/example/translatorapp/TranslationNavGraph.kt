@@ -23,7 +23,7 @@ fun TranslationNavGraph() {
         }
         composable("history") {
             HistoryScreen(
-                onNavigateToFavorites = { navController.navigate("favorites") }
+                onBack = {navController.popBackStack()}
             )
         }
         composable("favorites") {

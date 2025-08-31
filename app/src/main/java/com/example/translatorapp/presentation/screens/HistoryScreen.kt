@@ -19,116 +19,74 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.translatorapp.WordTranslation
+import com.example.translatorapp.di.HistoryViewModelFactory
+import com.example.translatorapp.presentation.viewmodels.HistoryViewModel
 
 // presentation/screens/HistoryScreen.kt
 @Composable
 fun HistoryScreen(
-    onNavigateToFavorites: () -> Unit
+    onBack: () -> Unit
 ) {
-    // Моковые данные для истории
-    val translations = remember {
-        listOf(
-            WordTranslation(1, "hello", "привет", true),
-            WordTranslation(2, "world", "мир", false),
-            WordTranslation(3, "android", "андроид", true),
-            WordTranslation(4, "kotlin", "котлин", false),
-            WordTranslation(5, "compose", "композ", true)
-        )
-    }
+    val context = LocalContext.current
+    val viewModel: HistoryViewModel = viewModel(factory = HistoryViewModelFactory(context))
+    val history by viewModel.history.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        // Заголовок и кнопка избранного
+    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                "История переводов"
-            )
-            Button(onClick = onNavigateToFavorites) {
-                Text("Избранное")
+            Button(onClick = onBack) {
+                Text("Назад")
+            }
+            Button(onClick = { viewModel.clearAll() }) {
+                Text("Очистить")
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Список переводов
-        LazyColumn {
-            items(translations) { translation ->
-                TranslationItem(
-                    translation = translation,
-                    onToggleFavorite = { /* пока пусто */ },
-                    onDelete = { /* пока пусто */ }
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun TranslationItem(
-    translation: WordTranslation,
-    onToggleFavorite: () -> Unit,
-    onDelete: () -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp)
-    ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    translation.word,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    translation.translation
-                )
-
-            }
-
-            // Кнопка избранного
-            IconButton(
-                onClick = onToggleFavorite,
-                modifier = Modifier.size(48.dp)
-            ) {
-                Icon(
-                    imageVector = if (translation.isFavorite)
-                        Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                    contentDescription = "Избранное",
-                    tint = if (translation.isFavorite) Color.Red else Color.Gray,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-
-            // Кнопка удаления
-            IconButton(
-                onClick = onDelete,
-                modifier = Modifier.size(48.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Удалить",
-                    tint = Color.Gray,
-                    modifier = Modifier.size(24.dp)
-                )
+        if (history.isEmpty()) {
+            Text(
+                text = "История пуста",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center
+            )
+        } else {
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                items(history) { item ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column {
+                            Text("${item.word} - ${item.translation}")
+                            item.transcription?.let {
+                                Text("[$it]", style = MaterialTheme.typography.bodySmall)
+                            }
+                        }
+                        IconButton(onClick = { viewModel.deleteItem(item.id) }) {
+                            Icon(Icons.Default.Delete, contentDescription = "Удалить")
+                        }
+                    }
+                }
             }
         }
     }

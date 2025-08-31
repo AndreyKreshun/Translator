@@ -53,11 +53,11 @@ fun FavoritesScreen() {
         } else {
             LazyColumn {
                 items(favorites) { translation ->
-                    TranslationItem(
+                    /*TranslationItem(
                         translation = translation,
                         onToggleFavorite = { /* пока пусто */ },
                         onDelete = { /* пока пусто */ }
-                    )
+                    )*/
                 }
             }
         }

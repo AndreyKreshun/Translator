@@ -1,8 +1,11 @@
 package com.example.translatorapp.di
 
 // di/ViewModelFactory.kt
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.room.Room
+import com.example.translatorapp.data.local.TranslationDatabase
 import com.example.translatorapp.data.network.SkyengApiService
 import com.example.translatorapp.data.repository.TranslationRepository
 import com.example.translatorapp.presentation.viewmodels.TranslationViewModel
@@ -11,7 +14,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-class TranslationViewModelFactory : ViewModelProvider.Factory {
+class TranslationViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(TranslationViewModel::class.java)) {
@@ -25,7 +28,16 @@ class TranslationViewModelFactory : ViewModelProvider.Factory {
                 .build()
                 .create(SkyengApiService::class.java)
 
-            val repository = TranslationRepository(apiService)
+            val db = Room.databaseBuilder(
+                context.applicationContext,
+                TranslationDatabase::class.java,
+                "translation_db"
+            ).build()
+
+            val repository = TranslationRepository(
+                apiService,
+                db.historyDao()
+            )
             return TranslationViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

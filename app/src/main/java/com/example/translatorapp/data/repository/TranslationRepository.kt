@@ -1,11 +1,17 @@
 package com.example.translatorapp.data.repository
 
 import com.example.translatorapp.data.ApiResult
+import com.example.translatorapp.data.local.dao.TranslationHistoryDao
+import com.example.translatorapp.data.local.entity.TranslationHistoryEntity
 import com.example.translatorapp.data.models.TranslationResponse
 import com.example.translatorapp.data.network.SkyengApiService
+import kotlinx.coroutines.flow.Flow
 
 // data/repository/TranslationRepository.kt
-class TranslationRepository(private val apiService: SkyengApiService) {
+class TranslationRepository(
+    private val apiService: SkyengApiService,
+    private val historyDao: TranslationHistoryDao
+) {
     suspend fun translateWord(word: String): ApiResult<TranslationResponse> {
         return try {
             val response = apiService.searchWords(word)
@@ -16,7 +22,6 @@ class TranslationRepository(private val apiService: SkyengApiService) {
                 if (words.isEmpty()) {
                     ApiResult.Error("Слово не найдено")
                 } else {
-                    // Берем первое слово и первый вариант перевода
                     val firstWord = words.first()
                     val firstMeaning = firstWord.meanings.firstOrNull()
 
@@ -27,6 +32,16 @@ class TranslationRepository(private val apiService: SkyengApiService) {
                             transcription = firstMeaning.transcription,
                             imageUrl = firstMeaning.imageUrl
                         )
+
+                        // Сохраняем в историю
+                        historyDao.insert(
+                            TranslationHistoryEntity(
+                                word = translationResponse.word,
+                                translation = translationResponse.translation,
+                                transcription = translationResponse.transcription
+                            )
+                        )
+
                         ApiResult.Success(translationResponse)
                     } else {
                         ApiResult.Error("Перевод не найден")
@@ -39,4 +54,10 @@ class TranslationRepository(private val apiService: SkyengApiService) {
             ApiResult.Error(e.message ?: "Ошибка сети")
         }
     }
+
+    fun getHistory(): Flow<List<TranslationHistoryEntity>> =
+        historyDao.getAllHistory()
+
+    suspend fun deleteHistoryItem(id: Int) = historyDao.deleteById(id)
+    suspend fun clearHistory() = historyDao.clearAll()
 }
