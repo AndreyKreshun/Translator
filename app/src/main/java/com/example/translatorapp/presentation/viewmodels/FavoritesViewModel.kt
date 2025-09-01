@@ -9,14 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class HistoryViewModel(private val repository: TranslationRepository) : ViewModel() {
-    val history: StateFlow<List<TranslationHistoryEntity>> =
-        repository.getHistory().stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
-        )
-
+class FavoritesViewModel(private val repository: TranslationRepository) : ViewModel() {
     val favorites: StateFlow<List<TranslationHistoryEntity>> =
         repository.getFavorites().stateIn(
             scope = viewModelScope,
@@ -27,18 +20,6 @@ class HistoryViewModel(private val repository: TranslationRepository) : ViewMode
     fun toggleFavorite(id: Int, isFavorite: Boolean) {
         viewModelScope.launch {
             repository.toggleFavorite(id, isFavorite)
-        }
-    }
-
-    fun deleteItem(id: Int) {
-        viewModelScope.launch {
-            repository.deleteHistoryItem(id)
-        }
-    }
-
-    fun clearAll() {
-        viewModelScope.launch {
-            repository.clearHistory()
         }
     }
 }

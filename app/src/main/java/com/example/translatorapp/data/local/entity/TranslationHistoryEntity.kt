@@ -9,5 +9,6 @@ data class TranslationHistoryEntity(
     val word: String,
     val translation: String,
     val transcription: String?,
+    val isFavorite: Boolean = false,
     val timestamp: Long = System.currentTimeMillis()
 )

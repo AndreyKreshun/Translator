@@ -41,7 +41,8 @@ import com.example.translatorapp.presentation.viewmodels.HistoryViewModel
 // presentation/screens/HistoryScreen.kt
 @Composable
 fun HistoryScreen(
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onNavigateToFavorites: () -> Unit
 ) {
     val context = LocalContext.current
     val viewModel: HistoryViewModel = viewModel(factory = HistoryViewModelFactory(context))
@@ -55,8 +56,17 @@ fun HistoryScreen(
             Button(onClick = onBack) {
                 Text("Назад")
             }
-            Button(onClick = { viewModel.clearAll() }) {
-                Text("Очистить")
+
+            Row {
+                Button(
+                    onClick = onNavigateToFavorites,
+                    modifier = Modifier.padding(end = 8.dp)
+                ) {
+                    Text("Избранное")
+                }
+                Button(onClick = { viewModel.clearAll() }) {
+                    Text("Очистить")
+                }
             }
         }
 
@@ -73,6 +83,9 @@ fun HistoryScreen(
                 items(history) { item ->
                     HistoryItem(
                         item = item,
+                        onToggleFavorite = { id, isFavorite ->
+                            viewModel.toggleFavorite(id, isFavorite)
+                        },
                         onDelete = { viewModel.deleteItem(item.id) }
                     )
                 }

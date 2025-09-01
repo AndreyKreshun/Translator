@@ -60,4 +60,11 @@ class TranslationRepository(
 
     suspend fun deleteHistoryItem(id: Int) = historyDao.deleteById(id)
     suspend fun clearHistory() = historyDao.clearAll()
+
+    fun getFavorites(): Flow<List<TranslationHistoryEntity>> =
+        historyDao.getFavorites()
+
+    suspend fun toggleFavorite(id: Int, isFavorite: Boolean) {
+        historyDao.updateFavoriteStatus(id, isFavorite)
+    }
 }

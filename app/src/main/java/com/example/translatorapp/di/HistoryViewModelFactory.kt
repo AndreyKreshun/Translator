@@ -7,6 +7,7 @@ import androidx.room.Room
 import com.example.translatorapp.data.local.TranslationDatabase
 import com.example.translatorapp.data.network.SkyengApiService
 import com.example.translatorapp.data.repository.TranslationRepository
+import com.example.translatorapp.presentation.viewmodels.FavoritesViewModel
 import com.example.translatorapp.presentation.viewmodels.HistoryViewModel
 import com.example.translatorapp.presentation.viewmodels.TranslationViewModel
 import com.squareup.moshi.Moshi
@@ -38,6 +39,8 @@ class HistoryViewModelFactory(private val context: Context) : ViewModelProvider.
                 TranslationViewModel(repository) as T
             modelClass.isAssignableFrom(HistoryViewModel::class.java) ->
                 HistoryViewModel(repository) as T
+            modelClass.isAssignableFrom(FavoritesViewModel::class.java) ->
+                FavoritesViewModel(repository) as T
             else -> throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
