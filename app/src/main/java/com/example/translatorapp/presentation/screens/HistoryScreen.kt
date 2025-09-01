@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.translatorapp.WordTranslation
 import com.example.translatorapp.di.HistoryViewModelFactory
+import com.example.translatorapp.presentation.card.HistoryItem
 import com.example.translatorapp.presentation.viewmodels.HistoryViewModel
 
 // presentation/screens/HistoryScreen.kt
@@ -70,22 +71,10 @@ fun HistoryScreen(
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(history) { item ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Column {
-                            Text("${item.word} - ${item.translation}")
-                            item.transcription?.let {
-                                Text("[$it]", style = MaterialTheme.typography.bodySmall)
-                            }
-                        }
-                        IconButton(onClick = { viewModel.deleteItem(item.id) }) {
-                            Icon(Icons.Default.Delete, contentDescription = "Удалить")
-                        }
-                    }
+                    HistoryItem(
+                        item = item,
+                        onDelete = { viewModel.deleteItem(item.id) }
+                    )
                 }
             }
         }
