@@ -37,7 +37,6 @@ import com.example.translatorapp.presentation.card.HistoryItem
 import com.example.translatorapp.presentation.viewmodels.HistoryViewModel
 import org.koin.androidx.compose.koinViewModel
 
-// presentation/screens/HistoryScreen.kt
 @Composable
 fun HistoryScreen(
     onBack: () -> Unit,

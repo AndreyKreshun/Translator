@@ -8,7 +8,6 @@ import com.example.translatorapp.data.models.TranslationResponse
 import com.example.translatorapp.data.repository.TranslationRepository
 import kotlinx.coroutines.launch
 
-// presentation/viewmodels/TranslationViewModel.kt
 class TranslationViewModel(
     private val repository: TranslationRepository
 ) : ViewModel() {

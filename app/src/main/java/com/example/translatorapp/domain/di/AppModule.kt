@@ -1,4 +1,4 @@
-package com.example.translatorapp.di
+package com.example.translatorapp.domain.di
 
 import androidx.room.Room
 import com.example.translatorapp.data.local.TranslationDatabase

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LocalTextStyle
@@ -22,13 +23,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.translatorapp.data.ApiResult
 import com.example.translatorapp.presentation.viewmodels.TranslationViewModel
 import org.koin.androidx.compose.koinViewModel
 
-// presentation/screens/TranslationScreen.kt
 @Composable
 fun TranslationScreen(
     onNavigateToHistory: () -> Unit
@@ -55,10 +58,20 @@ fun TranslationScreen(
         // Поле ввода
         OutlinedTextField(
             value = uiState.word,
-            onValueChange = { viewModel.onWordChange(it) },
+            onValueChange = { newText ->
+                // Фильтруем только английские буквы
+                val filteredText = newText.filter { it.isLetter() && it.isEnglishLetter() }
+                viewModel.onWordChange(filteredText)
+            },
             label = { Text("Введите слово на английском") },
             textStyle = LocalTextStyle.current.copy(color = Color.Black),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done,
+                capitalization = KeyboardCapitalization.None,
+                autoCorrect = false
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -107,4 +120,7 @@ fun TranslationScreen(
             }
         }
     }
+}
+fun Char.isEnglishLetter(): Boolean {
+    return this in 'a'..'z' || this in 'A'..'Z'
 }

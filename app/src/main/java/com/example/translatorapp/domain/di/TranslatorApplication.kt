@@ -1,4 +1,4 @@
-package com.example.translatorapp.di
+package com.example.translatorapp.domain.di
 
 import android.app.Application
 import org.koin.android.ext.koin.androidContext

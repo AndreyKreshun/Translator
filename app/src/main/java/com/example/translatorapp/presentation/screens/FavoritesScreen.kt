@@ -28,7 +28,6 @@ import com.example.translatorapp.presentation.card.HistoryItem
 import com.example.translatorapp.presentation.viewmodels.FavoritesViewModel
 import org.koin.androidx.compose.koinViewModel
 
-// presentation/screens/FavoritesScreen.kt
 @Composable
 fun FavoritesScreen(
     onBack: () -> Unit

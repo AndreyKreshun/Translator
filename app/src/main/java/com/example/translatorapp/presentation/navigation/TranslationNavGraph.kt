@@ -1,4 +1,4 @@
-package com.example.translatorapp
+package com.example.translatorapp.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost

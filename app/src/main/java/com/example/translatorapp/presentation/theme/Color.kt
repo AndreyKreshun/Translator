@@ -1,4 +1,4 @@
-package com.example.translatorapp.ui.theme
+package com.example.translatorapp.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
