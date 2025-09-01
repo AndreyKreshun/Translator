@@ -24,10 +24,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.translatorapp.WordTranslation
-import com.example.translatorapp.di.HistoryViewModelFactory
 import com.example.translatorapp.presentation.card.HistoryItem
 import com.example.translatorapp.presentation.viewmodels.FavoritesViewModel
+import org.koin.androidx.compose.koinViewModel
 
 // presentation/screens/FavoritesScreen.kt
 @Composable
@@ -35,7 +34,7 @@ fun FavoritesScreen(
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
-    val viewModel: FavoritesViewModel = viewModel(factory = HistoryViewModelFactory(context))
+    val viewModel: FavoritesViewModel = koinViewModel()
     val favorites by viewModel.favorites.collectAsState()
 
     Column(

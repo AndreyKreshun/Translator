@@ -25,8 +25,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.translatorapp.data.ApiResult
-import com.example.translatorapp.di.TranslationViewModelFactory
 import com.example.translatorapp.presentation.viewmodels.TranslationViewModel
+import org.koin.androidx.compose.koinViewModel
 
 // presentation/screens/TranslationScreen.kt
 @Composable
@@ -34,7 +34,7 @@ fun TranslationScreen(
     onNavigateToHistory: () -> Unit
 ) {
     val context = LocalContext.current
-    val viewModel: TranslationViewModel = viewModel(factory = TranslationViewModelFactory(context))
+    val viewModel: TranslationViewModel = koinViewModel()
     val uiState by viewModel.uiState
 
     Column(

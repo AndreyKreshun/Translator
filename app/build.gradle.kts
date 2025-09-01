@@ -41,7 +41,10 @@ android {
 }
 
 dependencies {
-    val room_version = "2.6.1" // или актуальную версию
+    implementation ("io.insert-koin:koin-android:3.5.0")
+    implementation ("io.insert-koin:koin-androidx-compose:3.5.0")
+
+    val room_version = "2.6.1"
 
     implementation ("androidx.room:room-runtime:$room_version")
     ksp("androidx.room:room-compiler:2.6.1")

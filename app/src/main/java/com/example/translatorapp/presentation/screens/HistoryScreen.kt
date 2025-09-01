@@ -33,10 +33,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.translatorapp.WordTranslation
-import com.example.translatorapp.di.HistoryViewModelFactory
 import com.example.translatorapp.presentation.card.HistoryItem
 import com.example.translatorapp.presentation.viewmodels.HistoryViewModel
+import org.koin.androidx.compose.koinViewModel
 
 // presentation/screens/HistoryScreen.kt
 @Composable
@@ -45,7 +44,7 @@ fun HistoryScreen(
     onNavigateToFavorites: () -> Unit
 ) {
     val context = LocalContext.current
-    val viewModel: HistoryViewModel = viewModel(factory = HistoryViewModelFactory(context))
+    val viewModel: HistoryViewModel = koinViewModel()
     val history by viewModel.history.collectAsState()
 
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
